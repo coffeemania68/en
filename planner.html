@@ -1,0 +1,699 @@
+<html lang="en">  <!-- ko를 en으로 변경 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CoffeeMania's Annual Planner - Your Personal Goal Achievement System">
+    <title>CoffeeMania's Annual Planner</title>
+
+    <!-- Web App Icon Settings -->  <!-- 주석도 영어로 -->
+ <link rel="apple-touch-icon" href="https://cdn.litt.ly/images/JqbOGc9p8Y1Ayy0ulNVoEw2TihLwpVK1?s=600x600&m=outside&f=webp">
+    <link rel="icon" type="image/webp" href="https://cdn.litt.ly/images/JqbOGc9p8Y1Ayy0ulNVoEw2TihLwpVK1?s=600x600&m=outside&f=webp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="2025 CoffeeMania's Planner">
+    
+ <!-- 스타일시트 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 헤더 스타일 */
+    .header-container {
+        position: relative;
+        min-height: 200px;
+    }
+
+    /* 모바일 버전 (기본) */
+    .header-slider {
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+    }
+
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .slide.active {
+        opacity: 1;
+    }
+
+    .slide:nth-child(1) {
+        background-image: url('https://cdn.litt.ly/images/JqbOGc9p8Y1Ayy0ulNVoEw2TihLwpVK1?s=600x600&m=outside&f=webp');
+    }
+
+    .slide:nth-child(2) {
+        background-image: url('https://blog.kakaocdn.net/dn/PwuUk/btsLCEcohDa/rbCuGpl6kt5keQrq3kcgg1/img.png');
+    }
+
+    .slide:nth-child(3) {
+        background-image: url('https://blog.kakaocdn.net/dn/RNx8Z/btsLCDkfJdv/3a2DyBsY4PEHn1YB2FDKJk/img.png');
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 10;
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+
+    /* PC 버전 */
+    @media (min-width: 768px) {
+        .header-slider {
+            display: none;
+        }
+
+        .header-pc {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem;
+            height: 200px;
+        }
+
+        .header-image {
+            flex: 1;
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    /* 모바일에서는 PC 버전 숨기기 */
+    @media (max-width: 767px) {
+        .header-pc {
+            display: none;
+        }
+    }
+
+    /* 클로버 애니메이션 (유지) */
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        100% { transform: translate(100px, -100px) rotate(360deg); }
+    }
+
+    .clover {
+        position: fixed;
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0.5;
+    }
+
+        #monthly-planners {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .monthly-planner {
+            transition: all 0.3s ease;
+        }
+
+        .monthly-planner.active-month {
+            order: -1;
+            position: sticky;
+            top: 1rem;
+            z-index: 10;
+        }
+
+        /* 월별 버튼 및 컨텐츠 스타일 */
+        .month-1-btn { background: linear-gradient(135deg, #90caf9, #42a5f5); }
+        .month-2-btn { background: linear-gradient(135deg, #f48fb1, #ec407a); }
+        .month-3-btn { background: linear-gradient(135deg, #dce775, #c0ca33); }
+        .month-4-btn { background: linear-gradient(135deg, #81d4fa, #29b6f6); }
+        .month-5-btn { background: linear-gradient(135deg, #ce93d8, #ab47bc); }
+        .month-6-btn { background: linear-gradient(135deg, #aed581, #7cb342); }
+        .month-7-btn { background: linear-gradient(135deg, #ffb74d, #fb8c00); }
+        .month-8-btn { background: linear-gradient(135deg, #4dd0e1, #00acc1); }
+        .month-9-btn { background: linear-gradient(135deg, #fff176, #ffd835); }
+        .month-10-btn { background: linear-gradient(135deg, #ff8a65, #f4511e); }
+        .month-11-btn { background: linear-gradient(135deg, #ba68c8, #8e24aa); }
+        .month-12-btn { background: linear-gradient(135deg, #9fa8da, #5c6bc0); }
+
+        .month-1 { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+        .month-2 { background: linear-gradient(135deg, #f8bbd0, #f48fb1); }
+        .month-3 { background: linear-gradient(135deg, #f0f4c3, #dce775); }
+        .month-4 { background: linear-gradient(135deg, #e1f5fe, #b3e5fc); }
+        .month-5 { background: linear-gradient(135deg, #f3e5f5, #e1bee7); }
+        .month-6 { background: linear-gradient(135deg, #dcedc8, #c5e1a5); }
+        .month-7 { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+        .month-8 { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); }
+        .month-9 { background: linear-gradient(135deg, #fff9c4, #fff59d); }
+        .month-10 { background: linear-gradient(135deg, #ffebee, #ffcdd2); }
+        .month-11 { background: linear-gradient(135deg, #f3e5f5, #e1bee7); }
+        .month-12 { background: linear-gradient(135deg, #e8eaf6, #c5cae9); }
+    </style>
+</head>
+
+    
+<body class="bg-gray-50">
+    <!-- 네잎클로버 배경 -->
+    <div id="cloverContainer"></div>
+<!-- Header Section -->
+<div class="header-container">
+    <!-- Mobile Version (Slider) -->
+    <div class="header-slider">
+        <div class="slide active"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="flex items-center justify-center h-full">
+            <div class="header-content text-center">
+                <h1 class="text-4xl font-bold text-white mb-2">Annual Planner</h1>
+                <p class="text-gray-100">A Space to Record Your Goals and Dreams</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PC Version (Side by Side) -->
+    <div class="header-pc">
+        <div class="header-image">
+            <img src="https://cdn.litt.ly/images/JqbOGc9p8Y1Ayy0ulNVoEw2TihLwpVK1?s=600x600&m=outside&f=webp" alt="header 1">
+        </div>
+        <div class="header-image">
+            <img src="https://blog.kakaocdn.net/dn/PwuUk/btsLCEcohDa/rbCuGpl6kt5keQrq3kcgg1/img.png" alt="header 2">
+            <div class="header-content">
+                <h1 class="text-4xl font-bold text-white mb-2">Annual Planner</h1>
+                <p class="text-gray-100">A Space to Record Your Goals and Dreams</p>
+            </div>
+        </div>
+        <div class="header-image">
+            <img src="https://blog.kakaocdn.net/dn/RNx8Z/btsLCDkfJdv/3a2DyBsY4PEHn1YB2FDKJk/img.png" alt="header 3">
+        </div>
+    </div>
+</div>
+
+<div class="bg-yellow-50 p-4 rounded-lg mb-4">
+    <div class="text-sm text-gray-700">
+        <p class="font-medium mb-2">💡 Data Storage Guide</p>
+        <ul class="space-y-1">
+            <li>• Your entries are automatically saved</li>
+            <li>• Data may be lost if browser data is cleared</li>
+            <li>• Please keep important content backed up separately</li>
+        </ul>
+    </div>
+</div>
+<div class="flex justify-end space-x-2 mb-4">
+    <button onclick="exportData()" 
+            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
+        <span>💾 Backup Data</span>
+    </button>
+    <label class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg cursor-pointer flex items-center">
+        <span>📥 Restore Backup</span>
+        <input type="file" onchange="importData(this.files[0])" class="hidden" accept=".json">
+    </label>
+</div>
+    
+<div class="max-w-4xl mx-auto p-4">
+    <!-- Bucket List Section -->
+        <div class="mb-6">
+            <button id="bucketListBtn" 
+                    class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                <span class="text-lg font-semibold">Bucket List</span>
+                <span id="bucket-list-arrow">▼</span>
+            </button>
+            <div id="bucketListContent" class="hidden bg-white rounded-lg shadow-md mt-2 p-4">
+                <div id="bucketListItems" class="space-y-4">
+                    <!-- Bucket list items will be added here -->
+                </div>
+                <button onclick="addBucketListItem()" 
+                        class="mt-4 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+                    + Add New Goal
+                </button>
+            </div>
+        </div>
+
+        <!-- Monthly Planner Section -->
+        <div id="monthly-planners" class="space-y-4">
+            <!-- Monthly planners will be added here -->
+        </div>
+    </div>
+
+    <script>
+        // Create and animate clovers
+        function createClovers() {
+            const container = document.getElementById('cloverContainer');
+            for (let i = 0; i < 20; i++) {
+                const clover = document.createElement('div');
+                clover.className = 'clover';
+                clover.innerHTML = '🍀';
+                clover.style.left = Math.random() * 100 + 'vw';
+                clover.style.top = Math.random() * 100 + 'vh';
+                clover.style.animation = `float ${5 + Math.random() * 10}s linear infinite`;
+                container.appendChild(clover);
+            }
+        }
+
+        // Toggle bucket list function
+        function toggleBucketList() {
+            const content = document.getElementById('bucketListContent');
+            const arrow = document.getElementById('bucket-list-arrow');
+            content.classList.toggle('hidden');
+            arrow.textContent = content.classList.contains('hidden') ? '▼' : '▲';
+        }
+// Add bucket list item function
+function addBucketListItem() {
+    const container = document.getElementById('bucketListItems');
+    const itemId = 'item-' + Date.now();
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 p-2 border rounded-lg';
+    itemDiv.id = itemId;
+    itemDiv.innerHTML = `
+        <input type="text" 
+               class="w-full sm:w-auto flex-1 p-2 border rounded-md" 
+               placeholder="Enter your new goal"
+               onchange="saveToLocalStorage()">
+        <div class="flex items-center space-x-1 w-full sm:w-auto justify-between sm:justify-start">
+            <div class="flex space-x-1">
+                ${Array(5).fill(0).map(() => `
+                    <input type="checkbox" 
+                           class="form-checkbox h-5 w-5 text-purple-600"
+                           onchange="saveToLocalStorage()">
+                `).join('')}
+            </div>
+            <button onclick="deleteItem('${itemId}')" 
+                    class="px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                Delete
+            </button>
+        </div>
+    `;
+    container.appendChild(itemDiv);
+    saveToLocalStorage();
+}
+
+// Delete item function
+function deleteItem(itemId) {
+    const item = document.getElementById(itemId);
+    if (item && confirm('Are you sure you want to delete this goal?')) {
+        item.remove();
+        saveToLocalStorage();
+    }
+}
+
+// Delete week function
+function deleteWeek(weekElement) {
+    if (confirm('Are you sure you want to delete this week?')) {
+        weekElement.remove();
+    }
+}
+// Save to local storage
+function saveToLocalStorage() {
+    try {
+        const items = [];
+        document.querySelectorAll('#bucketListItems > div').forEach(item => {
+            if (item.querySelector('input[type="text"]')) {  // Save only items with text input
+                const text = item.querySelector('input[type="text"]').value;
+                const checks = Array.from(item.querySelectorAll('input[type="checkbox"]'))
+                                  .map(cb => cb.checked);
+                items.push({ text, checks });
+            }
+        });
+        localStorage.setItem('bucketListAnnual', JSON.stringify(items));
+        return true;
+    } catch (error) {
+        console.error('Save failed:', error);
+        showSaveStatus('Error occurred while saving', 'error');
+        return false;
+    }
+}
+
+// Show save status function
+function showSaveStatus(message) {
+    const status = document.createElement('div');
+    status.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg transition-opacity duration-500';
+    status.textContent = message;
+    document.body.appendChild(status);
+    setTimeout(() => status.remove(), 1500);
+}
+
+// Auto save events
+document.addEventListener('blur', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        saveToLocalStorage();
+        showSaveStatus('Saved successfully');
+    }
+}, true);
+
+window.addEventListener('beforeunload', () => {
+    saveToLocalStorage();
+});
+
+// Load from local storage
+function loadFromLocalStorage() {
+    const items = JSON.parse(localStorage.getItem('bucketListAnnual') || '[]');
+    const container = document.getElementById('bucketListItems');
+    container.innerHTML = '';
+
+    // Add welcome message
+    const welcomeDiv = document.createElement('div');
+    welcomeDiv.className = 'bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-lg mb-4 text-center shadow-sm';
+    welcomeDiv.innerHTML = `
+        <p class="text-gray-700 font-medium">Where Records Become Reality</p>
+    `;
+    container.appendChild(welcomeDiv);
+    // Load saved items
+    items.forEach(item => {
+        const itemId = 'item-' + Date.now();
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 p-2 border rounded-lg';
+        itemDiv.id = itemId;
+        itemDiv.innerHTML = `
+            <input type="text" 
+                   class="w-full sm:w-auto flex-1 p-2 border rounded-md" 
+                   value="${item.text}"
+                   onchange="saveToLocalStorage()">
+            <div class="flex items-center space-x-1 w-full sm:w-auto justify-between sm:justify-start">
+                <div class="flex space-x-1">
+                    ${item.checks.map(checked => `
+                        <input type="checkbox" 
+                               class="form-checkbox h-5 w-5 text-purple-600"
+                               ${checked ? 'checked' : ''}
+                               onchange="saveToLocalStorage()">
+                    `).join('')}
+                </div>
+                <button onclick="deleteItem('${itemId}')" 
+                        class="px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                    Delete
+                </button>
+            </div>
+        `;
+        container.appendChild(itemDiv);
+    });
+
+    // Add message for empty list
+    if (items.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'text-center text-gray-500 py-4';
+        emptyMessage.innerHTML = 'Add your first goal!';
+        container.appendChild(emptyMessage);
+    }
+}
+
+        // Add week function
+        function addWeek(monthId) {
+            const weekContainer = document.getElementById(`weeks-${monthId}`);
+            const weekCount = weekContainer.children.length + 1;
+            const weekDiv = document.createElement('div');
+            weekDiv.className = 'week-planner bg-gray-50 p-4 rounded-lg mt-4 relative';
+            weekDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="font-medium">Week ${weekCount}</h4>
+                    <button onclick="deleteWeek(this.parentElement.parentElement)" 
+                            class="text-red-500 hover:text-red-700">
+                        Delete
+                    </button>
+                </div>
+                <textarea class="w-full p-2 border rounded-md" 
+                          placeholder="Enter your plans for this week"></textarea>
+            `;
+            weekContainer.appendChild(weekDiv);
+        }
+// Create monthly planners
+function createMonthlyPlanners() {
+    const container = document.getElementById('monthly-planners');
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    for (let month = 1; month <= 12; month++) {
+        const monthDiv = document.createElement('div');
+        monthDiv.className = 'monthly-planner';
+        monthDiv.innerHTML = `
+            <button class="w-full month-${month}-btn text-white p-4 rounded-lg shadow-md flex justify-between items-center"
+                    onclick="toggleMonth(${month})">
+                <span class="text-lg font-semibold">${months[month-1]} Planner</span>
+                <span id="month-${month}-arrow">▼</span>
+            </button>
+            <div id="month-${month}-content" class="hidden month-${month} rounded-lg shadow-md mt-2 p-4">
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold">Monthly Goals</h3>
+                    <textarea class="w-full p-2 border rounded-md" 
+                            placeholder="Enter your goals for this month"></textarea>
+                    
+                    <div id="weeks-${month}" class="weekly-planners space-y-4">
+                        <div class="week-planner bg-gray-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-medium">Week 1</h4>
+                                <button onclick="deleteWeek(this.parentElement.parentElement)" 
+                                        class="text-red-500 hover:text-red-700">
+                                    Delete
+                                </button>
+                            </div>
+                            <textarea class="w-full p-2 border rounded-md" 
+                                    placeholder="Enter your plans for this week"></textarea>
+                        </div>
+                    </div>
+                    
+                    <button onclick="addWeek(${month})" 
+                            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        + Add Week
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(monthDiv);
+    }
+}
+
+// Toggle monthly planner
+function toggleMonth(month) {
+    const allMonthPlanners = document.querySelectorAll('.monthly-planner');
+    const selectedPlanner = document.querySelector(`.monthly-planner:nth-child(${month})`);
+    const content = document.getElementById(`month-${month}-content`);
+    const arrow = document.getElementById(`month-${month}-arrow`);
+
+    // Close all other months
+    allMonthPlanners.forEach(planner => {
+        planner.classList.remove('active-month');
+        const monthContent = planner.querySelector('[id^="month-"][id$="-content"]');
+        const monthArrow = planner.querySelector('[id^="month-"][id$="-arrow"]');
+        if (monthContent) {
+            monthContent.classList.add('hidden');
+            if (monthArrow) monthArrow.textContent = '▼';
+        }
+    });
+            // Toggle selected month
+            if (content.classList.contains('hidden')) {
+                // Open
+                content.classList.remove('hidden');
+                arrow.textContent = '▲';
+                selectedPlanner.classList.add('active-month');
+                
+                // Adjust scroll position
+                const bucketList = document.querySelector('.mb-6');
+                const offset = bucketList.getBoundingClientRect().bottom + window.scrollY + 20;
+                window.scrollTo({
+                    top: offset,
+                    behavior: 'smooth'
+                });
+            } else {
+                // Close
+                content.classList.add('hidden');
+                arrow.textContent = '▼';
+                selectedPlanner.classList.remove('active-month');
+            }
+        }
+
+// Save monthly data
+function saveMonthlyData(month) {
+    const monthContent = document.getElementById(`month-${month}-content`);
+    if (!monthContent) return;
+
+    const monthlyGoal = monthContent.querySelector('textarea').value;
+    const weeklyPlans = Array.from(monthContent.querySelectorAll('.week-planner')).map(week => ({
+        weekNumber: week.querySelector('h4').textContent,
+        plan: week.querySelector('textarea').value
+    }));
+
+    localStorage.setItem(`month-${month}-annual`, JSON.stringify({
+        monthlyGoal,
+        weeklyPlans
+    }));
+}
+
+// Load monthly data
+function loadMonthlyData(month) {
+    const savedData = localStorage.getItem(`month-${month}-annual`);
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        const monthContent = document.getElementById(`month-${month}-content`);
+        if (!monthContent) return;
+
+        // Restore monthly goals
+        const monthlyGoalTextarea = monthContent.querySelector('textarea');
+        if (monthlyGoalTextarea) {
+            monthlyGoalTextarea.value = data.monthlyGoal;
+        }
+
+        // Restore weekly plans
+        const weekContainer = document.getElementById(`weeks-${month}`);
+        if (weekContainer) {
+            weekContainer.innerHTML = ''; // Clear existing weekly plans
+            data.weeklyPlans.forEach(weekPlan => {
+                const weekDiv = document.createElement('div');
+                weekDiv.className = 'week-planner bg-gray-50 p-4 rounded-lg';
+                weekDiv.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-medium">${weekPlan.weekNumber}</h4>
+                        <button onclick="deleteWeek(this.parentElement.parentElement)" 
+                                class="text-red-500 hover:text-red-700">
+                            Delete
+                        </button>
+                    </div>
+                    <textarea class="w-full p-2 border rounded-md" 
+                            onchange="saveMonthlyData(${month})"
+                            placeholder="Enter your plans for this week">${weekPlan.plan}</textarea>
+                `;
+                weekContainer.appendChild(weekDiv);
+            });
+        }
+    }
+}
+// Save all monthly data
+function saveAllMonthlyData() {
+    for (let month = 1; month <= 12; month++) {
+        saveMonthlyData(month);
+    }
+}
+
+// Load all monthly data
+function loadAllMonthlyData() {
+    for (let month = 1; month <= 12; month++) {
+        loadMonthlyData(month);
+    }
+}
+
+// Add auto save event
+document.addEventListener('input', (e) => {
+    const monthContent = e.target.closest('[id^="month-"][id$="-content"]');
+    if (monthContent) {
+        const month = monthContent.id.match(/month-(\d+)-content/)[1];
+        saveMonthlyData(month);
+        showSaveStatus('Saved successfully');
+    }
+});
+
+// Initialize function
+document.addEventListener('DOMContentLoaded', () => {
+    createMonthlyPlanners();
+    loadFromLocalStorage();
+    loadAllMonthlyData(); // Load all monthly data
+    if (document.querySelectorAll('#bucketListItems > div').length === 0) {
+        addBucketListItem();
+    }
+    
+    document.getElementById('bucketListBtn').addEventListener('click', toggleBucketList);
+});
+
+// Save all data before unloading page
+window.addEventListener('beforeunload', () => {
+    saveToLocalStorage();
+    saveAllMonthlyData();
+});
+
+// Data backup/restore functions
+function exportData() {
+    const data = {
+        bucketList: JSON.parse(localStorage.getItem('bucketListAnnual') || '[]'),
+        monthlyPlans: {}
+    };
+    
+    // Collect monthly data
+    for (let i = 1; i <= 12; i++) {
+        data.monthlyPlans[i] = JSON.parse(localStorage.getItem(`month-${i}-annual`) || 'null');
+    }
+
+    // Download as file
+    const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `planner-backup-${new Date().toLocaleDateString()}.json`;
+    a.click();
+    showSaveStatus('Backup file has been downloaded');
+}
+function importData(file) {
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // Restore data
+            if (data.bucketList) {
+                localStorage.setItem('bucketListAnnual', JSON.stringify(data.bucketList));
+            }
+            
+            if (data.monthlyPlans) {
+                Object.entries(data.monthlyPlans).forEach(([month, plans]) => {
+                    if (plans) {
+                        localStorage.setItem(`month-${month}-annual`, JSON.stringify(plans));
+                    }
+                });
+            }
+
+            showSaveStatus('Data has been restored successfully');
+            setTimeout(() => location.reload(), 1000); // Refresh page after 1 second
+        } catch (error) {
+            showSaveStatus('Error occurred while restoring backup file', 'error');
+        }
+    };
+    reader.readAsText(file);
+}
+
+// Monthly data save function (with success/error notifications)
+function saveMonthlyData(month) {
+    try {
+        const monthContent = document.getElementById(`month-${month}-content`);
+        if (!monthContent) return;
+
+        const monthlyGoal = monthContent.querySelector('textarea').value;
+        const weeklyPlans = Array.from(monthContent.querySelectorAll('.week-planner')).map(week => ({
+            weekNumber: week.querySelector('h4').textContent,
+            plan: week.querySelector('textarea').value
+        }));
+
+        localStorage.setItem(`month-${month}-annual`, JSON.stringify({
+            monthlyGoal,
+            weeklyPlans
+        }));
+        
+        showSaveStatus(`${months[month-1]} data saved successfully`);
+        return true;
+    } catch (error) {
+        console.error('Save failed:', error);
+        showSaveStatus(`Error saving ${months[month-1]} data`, 'error');
+        return false;
+    }
+}
+
+// Show save status function (with error state)
+function showSaveStatus(message, type = 'success') {
+    const status = document.createElement('div');
+    status.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg text-white ${
+        type === 'error' ? 'bg-red-500' : 'bg-green-500'
+    }`;
+    status.textContent = message;
+    document.body.appendChild(status);
+    setTimeout(() => status.remove(), 2000);
+}
+
+    </script>
+    <footer class="text-center text-gray-600 text-sm mt-8 pb-4">
+    © 2024 CoffeeMania's Annual Planner. All rights reserved.
+</footer>
+</body>
+</html>
